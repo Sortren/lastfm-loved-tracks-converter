@@ -1,0 +1,2 @@
+from .lastfm_controller import lastfm_controller
+from .spotify_controller import spotify_controller
