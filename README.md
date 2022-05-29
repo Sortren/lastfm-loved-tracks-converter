@@ -31,7 +31,7 @@ SPOTIFY_CLIENT_SECRET= client secret from dev dashboard in spotify
 SPOTIFY_REDIRECT_URI=http://127.0.0.1:5000/api/v1/spotify-controller/temporary -> link to the page after successful OAuth2 Redirection
 ```
 ----
-### Documentation
+### API Documentation
 I have used the Swagger (OpenAPI) from Flask-Restx module, to get auto-generated docs and proper args/req body in endpoints <br />
 
 To display the docs, after running up the server, get to the endpoint:
@@ -44,3 +44,10 @@ You will see smth like this:
 You can easily check what is the expected request body or what are the expected arguments of particular endpoint
 ![image](https://user-images.githubusercontent.com/79079000/170893564-4bbebebb-6239-44b8-ab17-121de5377378.png)
 
+----
+### OAuth2 Authorization Flow
+To get authorized by the Spotify using my API, the specific flow has to be done <br />
+1. GET request on /spotify-controller/authorize will return the prepared link to Spotify OAuth2 authorization website
+2. After passing credentials to Spotify and getting access to my app, you will be redirected to specified endpoint (mentioned in .env file). This endpoint will have the specific "code" received from the Spotify service in the queryparams. 
+3. Pass the code from point 2 to the GET /spotify-controller/authorize-callback as a query parameter, if the proccess is successful you will be granted a permission to send requests to spotify via my API, in the response body you will receive the Bearer token which will be useful later
+4. Finally, when you have received the Bearer token, you can invoke the rest of the endpoints from that spotify-controller/, just pass it in the headers as "Authorization"
