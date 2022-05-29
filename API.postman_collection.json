@@ -1,0 +1,239 @@
+{
+	"info": {
+		"_postman_id": "28c81566-4ce9-47d8-aee8-3cad48c415fa",
+		"name": "Lastfm Loved Tracks to Spotify Playlist",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15120449"
+	},
+	"item": [
+		{
+			"name": "/api/v1/spotify-controller/playlists/<user_id>",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"new\",\r\n    \"description\": \"test\",\r\n    \"public\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/spotify-controller/playlists/username",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"spotify-controller",
+						"playlists",
+						"username"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/spotify-controller/search",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tracks\": [\r\n        {\r\n            \"track_name\": \"Purple Haze\",\r\n            \"artist_name\": \"Jimi Hendrix\"\r\n        },\r\n        {\r\n            \"track_name\": \"Wish you were here\",\r\n            \"artist_name\": \"David Gilmour\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/spotify-controller/search",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"spotify-controller",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/spotify-controller/playlists/<playlist_id>/tracks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tracks\": [\"spotify:track:2q0BviPG80XxEkaCJCrBm8\", \"spotify:track:2q0BviPG80XxEkaCJCrBm8\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/spotify-controller/playlists/aaa/tracks",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"spotify-controller",
+						"playlists",
+						"aaa",
+						"tracks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/lastfm-controller/loved-tracks?username=AAA&format=json",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/lastfm-controller/loved-tracks?username=AAA&format=json",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"lastfm-controller",
+						"loved-tracks"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "AAA"
+						},
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/spotify-controller/authorize",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/spotify-controller/authorize",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"spotify-controller",
+						"authorize"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v1/spotify-controller/authorize-callback?code=",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/v1/spotify-controller/authorize-callback?code=AAA",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"spotify-controller",
+						"authorize-callback"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "AAA"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
