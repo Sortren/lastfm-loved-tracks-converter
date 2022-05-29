@@ -2,6 +2,7 @@ from flask import make_response, request
 from flask_restx import Namespace, Resource
 import requests as req
 from misc.config import Config
+from api.parsers import authorize_callback_args
 
 
 spotify_controller = Namespace("SpotifyController",
@@ -129,6 +130,7 @@ class Authorize(Resource):
 
 @spotify_controller.route("/authorizeCallback")
 class AuthorizeCallback(Resource):
+    @spotify_controller.expect(authorize_callback_args)
     @spotify_controller.doc("")
     def get(self):
         code = request.args.get("code")
