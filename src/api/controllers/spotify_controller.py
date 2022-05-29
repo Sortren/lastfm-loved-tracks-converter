@@ -7,6 +7,47 @@ from misc.config import Config
 spotify_controller = Blueprint("spotify_controller", __name__)
 
 
+class Search(MethodView):
+    def get(self):
+        bearer_token = request.headers.get("Authorization")
+        request_body_payload = request.get_json().get("tracks")
+
+        found_tracks = []
+        not_found_tracks = []
+
+        for track in request_body_payload:
+            track_name = track.get("track_name")
+            artist_name = track.get("artist_name")
+
+            track_searched_response = req.get(
+                "https://api.spotify.com/v1/search",
+                params={
+                    "q": track_name,
+                    "type": "track",
+                    "limit": 20
+                },
+                headers={
+                    "Authorization": bearer_token
+                })
+
+            is_found = False
+
+            for searched_track in track_searched_response.json().get("tracks").get("items"):
+                if artist_name in searched_track.get("artists")[0].get("name"):
+                    found_tracks.append(searched_track.get("uri"))
+                    is_found = True
+                    break
+
+            if is_found is False:
+                not_found_tracks.append(f"{track_name}, {artist_name}")
+
+        return make_response(
+            {
+                "found_tracks": found_tracks,
+                "not_found_tracks": not_found_tracks
+            }, 200)
+
+
 class Playlists(MethodView):
     def post(self, user_id):
         bearer_token = request.headers.get("Authorization")
@@ -101,6 +142,9 @@ spotify_controller.add_url_rule(
 
 spotify_controller.add_url_rule(
     "/playlists/<playlist_id>/tracks", view_func=playlists_view)
+
+spotify_controller.add_url_rule(
+    "/search", view_func=Search.as_view("search"))
 
 spotify_controller.add_url_rule(
     "/authorize", view_func=Authorize.as_view("authorize"))
