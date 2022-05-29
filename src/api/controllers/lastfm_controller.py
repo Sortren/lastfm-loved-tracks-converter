@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response, request
+from flask import make_response, request
 from flask_restx import Resource, Namespace
 import requests as req
 
@@ -23,4 +23,4 @@ class LovedTracks(Resource):
 
         )
 
-        return make_response(loved_tracks.content, loved_tracks.status_code)
+        return loved_tracks.content, loved_tracks.status_code

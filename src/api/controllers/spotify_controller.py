@@ -1,6 +1,7 @@
-from flask import make_response, request
+from flask import request
 from flask_restx import Namespace, Resource, fields
 import requests as req
+
 from misc.config import Config
 from api.parsers import authorize_callback_args, auth_args
 
@@ -87,8 +88,7 @@ class UserPlaylist(Resource):
             }
         )
 
-        return make_response(playlist_created_response.json(),
-                             playlist_created_response.status_code)
+        return playlist_created_response.json(), playlist_created_response.status_code
 
 
 @spotify_controller.route("/playlists/<string:playlist_id>/tracks")
@@ -114,8 +114,7 @@ class PlaylistTracks(Resource):
             }
         )
 
-        return make_response(tracks_added_response.json(),
-                             tracks_added_response.status_code)
+        return tracks_added_response.json(), tracks_added_response.status_code
 
 
 @spotify_controller.route("/userProfileData")
@@ -130,8 +129,7 @@ class UserProfileData(Resource):
             headers={"Authorization": bearer_token}
         )
 
-        return make_response(profile_data.json(),
-                             profile_data.status_code)
+        return profile_data.json(), profile_data.status_code
 
 
 @spotify_controller.route("/authorize")
@@ -147,7 +145,7 @@ class Authorize(Resource):
             'client_id': Config.SPOTIFY_CLIENT_ID
         }).prepare().url
 
-        return make_response({"url": url}, 200)
+        return {"url": url}, 200
 
 
 @spotify_controller.route("/authorizeCallback")
@@ -165,8 +163,7 @@ class AuthorizeCallback(Resource):
             'client_secret': Config.SPOTIFY_CLIENT_SECRET
         })
 
-        return make_response(access_data.json(),
-                             access_data.status_code)
+        return access_data.json(), access_data.status_code
 
 
 @spotify_controller.route("/temporary")
