@@ -1,13 +1,16 @@
 from flask import Blueprint, make_response, request
-from flask.views import MethodView
+from flask_restx import Api, Resource, Namespace
 import requests as req
 from misc.config import Config
 
 
-lastfm_controller = Blueprint("lastfm_controller", __name__)
+lastfm_controller = Namespace("LastfmController",
+                              description="Lastfm integration logic")
 
 
-class LovedTracks(MethodView):
+@lastfm_controller.route("/lovedTracks")
+class LovedTracks(Resource):
+    @lastfm_controller.doc("")
     def get(self):
         username = request.args.get("username")
         format = request.args.get("format")
@@ -18,7 +21,3 @@ class LovedTracks(MethodView):
         )
 
         return make_response(loved_tracks.content, loved_tracks.status_code)
-
-
-lastfm_controller.add_url_rule(
-    "/lovedTracks", view_func=LovedTracks.as_view("LovedTracks"))

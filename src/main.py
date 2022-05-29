@@ -1,14 +1,10 @@
 from flask import Flask
-from api.api import api
+from api.controllers import api_bp
+from misc.config import Config
 
 app = Flask(__name__)
-app.register_blueprint(api, url_prefix="/api/v1")
-
-
-@app.route("/")
-def home():
-    return "home page"
+app.register_blueprint(api_bp)
 
 
 if __name__ == "__main__":
-    app.run("127.0.0.1", debug=True)
+    app.run("127.0.0.1", debug=Config.DEBUG)

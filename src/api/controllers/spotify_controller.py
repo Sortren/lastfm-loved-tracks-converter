@@ -1,13 +1,16 @@
-from flask import Blueprint, make_response, request
-from flask.views import MethodView
+from flask import make_response, request
+from flask_restx import Namespace, Resource
 import requests as req
 from misc.config import Config
 
 
-spotify_controller = Blueprint("spotify_controller", __name__)
+spotify_controller = Namespace("SpotifyController",
+                               description="Spotify integration logic")
 
 
-class Search(MethodView):
+@spotify_controller.route("/search")
+class Search(Resource):
+    @spotify_controller.doc("")
     def get(self):
         bearer_token = request.headers.get("Authorization")
         request_body_payload = request.get_json().get("tracks")
@@ -48,7 +51,9 @@ class Search(MethodView):
             }, 200)
 
 
-class Playlists(MethodView):
+@spotify_controller.route("/playlists/<string:user_id>")
+class UserPlaylist(Resource):
+    @spotify_controller.doc("")
     def post(self, user_id):
         bearer_token = request.headers.get("Authorization")
         request_body_payload = request.get_json()
@@ -68,6 +73,10 @@ class Playlists(MethodView):
         return make_response(playlist_created_response.json(),
                              playlist_created_response.status_code)
 
+
+@spotify_controller.route("/playlists/<string:playlist_id>/tracks")
+class PlaylistTracks(Resource):
+    @spotify_controller.doc("")
     def put(self, playlist_id):
         bearer_token: str = request.headers.get("Authorization")
         tracks_payload: list[str] = request.get_json().get("tracks")
@@ -87,7 +96,9 @@ class Playlists(MethodView):
                              tracks_added_response.status_code)
 
 
-class UserProfileData(MethodView):
+@spotify_controller.route("/userProfileData")
+class UserProfileData(Resource):
+    @spotify_controller.doc("")
     def get(self):
         bearer_token = request.headers.get("Authorization")
 
@@ -100,7 +111,9 @@ class UserProfileData(MethodView):
                              profile_data.status_code)
 
 
-class Authorize(MethodView):
+@spotify_controller.route("/authorize")
+class Authorize(Resource):
+    @spotify_controller.doc("")
     def get(self):
         scopes = 'playlist-modify-public playlist-modify-private'
 
@@ -114,7 +127,9 @@ class Authorize(MethodView):
         return make_response({"url": url}, 200)
 
 
-class AuthorizeCallback(MethodView):
+@spotify_controller.route("/authorizeCallback")
+class AuthorizeCallback(Resource):
+    @spotify_controller.doc("")
     def get(self):
         code = request.args.get("code")
 
@@ -130,30 +145,8 @@ class AuthorizeCallback(MethodView):
                              access_data.status_code)
 
 
-class TemporarySpotifyRedirectEndpoint(MethodView):
+@spotify_controller.route("/temporary")
+class TemporarySpotifyRedirectEndpoint(Resource):
+    @spotify_controller.doc("")
     def get(self):
         return "temporary redirect endpoint after authorize"
-
-
-playlists_view = Playlists.as_view("playlists")
-
-spotify_controller.add_url_rule(
-    "/playlists/<user_id>", view_func=playlists_view)
-
-spotify_controller.add_url_rule(
-    "/playlists/<playlist_id>/tracks", view_func=playlists_view)
-
-spotify_controller.add_url_rule(
-    "/search", view_func=Search.as_view("search"))
-
-spotify_controller.add_url_rule(
-    "/authorize", view_func=Authorize.as_view("authorize"))
-
-spotify_controller.add_url_rule(
-    "/authorizeCallback", view_func=AuthorizeCallback.as_view("authorizeCallback"))
-
-spotify_controller.add_url_rule(
-    "/userProfileData", view_func=UserProfileData.as_view("userProfileData"))
-
-spotify_controller.add_url_rule(
-    "/temporary", view_func=TemporarySpotifyRedirectEndpoint.as_view("temporary"))
