@@ -7,7 +7,7 @@ from misc.config import Config
 spotify_controller = Blueprint("spotify_controller", __name__)
 
 
-class Playlist(MethodView):
+class Playlists(MethodView):
     def post(self, user_id):
         bearer_token = request.headers.get("Authorization")
         request_body_payload = request.get_json()
@@ -27,6 +27,24 @@ class Playlist(MethodView):
         return make_response(playlist_created_response.json(),
                              playlist_created_response.status_code)
 
+    def put(self, playlist_id):
+        bearer_token: str = request.headers.get("Authorization")
+        tracks_payload: list[str] = request.get_json().get("tracks")
+        tracks: str = ",".join(tracks_payload)
+
+        tracks_added_response = req.post(
+            f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks",
+            params={
+                "uris": tracks,
+            },
+            headers={
+                "Authorization": bearer_token
+            }
+        )
+
+        return make_response(tracks_added_response.json(),
+                             tracks_added_response.status_code)
+
 
 class UserProfileData(MethodView):
     def get(self):
@@ -37,7 +55,8 @@ class UserProfileData(MethodView):
             headers={"Authorization": bearer_token}
         )
 
-        return make_response(profile_data.json(), profile_data.status_code)
+        return make_response(profile_data.json(),
+                             profile_data.status_code)
 
 
 class Authorize(MethodView):
@@ -66,13 +85,22 @@ class AuthorizeCallback(MethodView):
             'client_secret': Config.SPOTIFY_CLIENT_SECRET
         })
 
-        return make_response(access_data.json, access_data.status_code)
+        return make_response(access_data.json(),
+                             access_data.status_code)
 
 
 class TemporarySpotifyRedirectEndpoint(MethodView):
     def get(self):
         return "temporary redirect endpoint after authorize"
 
+
+playlists_view = Playlists.as_view("playlists")
+
+spotify_controller.add_url_rule(
+    "/playlists/<user_id>", view_func=playlists_view)
+
+spotify_controller.add_url_rule(
+    "/playlists/<playlist_id>/tracks", view_func=playlists_view)
 
 spotify_controller.add_url_rule(
     "/authorize", view_func=Authorize.as_view("authorize"))
@@ -82,9 +110,6 @@ spotify_controller.add_url_rule(
 
 spotify_controller.add_url_rule(
     "/userProfileData", view_func=UserProfileData.as_view("userProfileData"))
-
-spotify_controller.add_url_rule(
-    "/playlist/<user_id>", view_func=Playlist.as_view("playlist"))
 
 spotify_controller.add_url_rule(
     "/temporary", view_func=TemporarySpotifyRedirectEndpoint.as_view("temporary"))

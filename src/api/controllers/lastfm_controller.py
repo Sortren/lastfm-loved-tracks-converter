@@ -7,7 +7,7 @@ from misc.config import Config
 lastfm_controller = Blueprint("lastfm_controller", __name__)
 
 
-class LovedTrack(MethodView):
+class LovedTracks(MethodView):
     def get(self):
         username = request.args.get("username")
         format = request.args.get("format")
@@ -21,4 +21,4 @@ class LovedTrack(MethodView):
 
 
 lastfm_controller.add_url_rule(
-    "/lovedTrack", view_func=LovedTrack.as_view("LovedTrack"))
+    "/lovedTracks", view_func=LovedTracks.as_view("LovedTracks"))
