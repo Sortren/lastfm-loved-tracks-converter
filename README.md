@@ -28,7 +28,7 @@ API_KEY = api key to the Last.fm service
 DEBUG = True/False (if the app are run in the debug mode or not)
 SPOTIFY_CLIENT_ID= client id from dev dashboard in spotify
 SPOTIFY_CLIENT_SECRET= client secret from dev dashboard in spotify
-SPOTIFY_REDIRECT_URI=http://127.0.0.1:5000/api/v1/SpotifyController/temporary -> link to the page after successful OAuth2 Redirection
+SPOTIFY_REDIRECT_URI=http://127.0.0.1:5000/api/v1/spotify-controller/temporary -> link to the page after successful OAuth2 Redirection
 ```
 ----
 ### Documentation
