@@ -22,7 +22,7 @@ class Search(Resource):
     })
 
     @spotify_controller.doc("")
-    @spotify_controller.expect(tracks_to_search_model)
+    @spotify_controller.expect(auth_args, tracks_to_search_model)
     def get(self):
         bearer_token = request.headers.get("Authorization")
         request_body_payload = request.get_json().get("tracks")
