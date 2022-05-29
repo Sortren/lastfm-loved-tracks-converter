@@ -5,11 +5,11 @@ import requests as req
 from misc.config import Config
 from api.parsers import loved_tracks_args
 
-lastfm_controller = Namespace("LastfmController",
+lastfm_controller = Namespace("lastfm-controller",
                               description="Lastfm integration logic")
 
 
-@lastfm_controller.route("/lovedTracks")
+@lastfm_controller.route("/loved-tracks")
 class LovedTracks(Resource):
 
     @lastfm_controller.expect(loved_tracks_args)

@@ -6,7 +6,7 @@ from misc.config import Config
 from api.parsers import authorize_callback_args, auth_args
 
 
-spotify_controller = Namespace("SpotifyController",
+spotify_controller = Namespace("spotify-controller",
                                description="Spotify integration logic")
 
 
@@ -117,7 +117,7 @@ class PlaylistTracks(Resource):
         return tracks_added_response.json(), tracks_added_response.status_code
 
 
-@spotify_controller.route("/userProfileData")
+@spotify_controller.route("/user-profile-data")
 class UserProfileData(Resource):
     @spotify_controller.expect(auth_args)
     @spotify_controller.doc("")
@@ -148,7 +148,7 @@ class Authorize(Resource):
         return {"url": url}, 200
 
 
-@spotify_controller.route("/authorizeCallback")
+@spotify_controller.route("/authorize-callback")
 class AuthorizeCallback(Resource):
     @spotify_controller.expect(authorize_callback_args)
     @spotify_controller.doc("")
