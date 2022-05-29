@@ -11,7 +11,17 @@ spotify_controller = Namespace("SpotifyController",
 
 @spotify_controller.route("/search")
 class Search(Resource):
+    track_model = spotify_controller.model("Track to search", {
+        "track_name": fields.String("Name of the track"),
+        "artist_name": fields.String("Name of the artist")
+    })
+
+    tracks_to_search_model = spotify_controller.model("Tracks to search", {
+        "tracks": fields.List(fields.Nested(track_model))
+    })
+
     @spotify_controller.doc("")
+    @spotify_controller.expect(tracks_to_search_model)
     def get(self):
         bearer_token = request.headers.get("Authorization")
         request_body_payload = request.get_json().get("tracks")
@@ -45,11 +55,10 @@ class Search(Resource):
             if is_found is False:
                 not_found_tracks.append(f"{track_name}, {artist_name}")
 
-        return make_response(
-            {
-                "found_tracks": found_tracks,
-                "not_found_tracks": not_found_tracks
-            }, 200)
+        return {
+            "found_tracks": found_tracks,
+            "not_found_tracks": not_found_tracks
+        }, 200
 
 
 @spotify_controller.route("/playlists/<string:user_id>")
