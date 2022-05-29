@@ -1,8 +1,8 @@
 from flask import make_response, request
-from flask_restx import Namespace, Resource
+from flask_restx import Namespace, Resource, fields
 import requests as req
 from misc.config import Config
-from api.parsers import authorize_callback_args
+from api.parsers import authorize_callback_args, auth_args
 
 
 spotify_controller = Namespace("SpotifyController",
@@ -54,7 +54,14 @@ class Search(Resource):
 
 @spotify_controller.route("/playlists/<string:user_id>")
 class UserPlaylist(Resource):
+    playlist_model = spotify_controller.model("Playlist", {
+        "name": fields.String("Spotify username for whom the playlist will be added"),
+        "description": fields.String("Description of a playlist"),
+        "public": fields.Boolean("Should playlist be public")
+    })
+
     @spotify_controller.doc("")
+    @spotify_controller.expect(auth_args, playlist_model)
     def post(self, user_id):
         bearer_token = request.headers.get("Authorization")
         request_body_payload = request.get_json()
@@ -77,6 +84,11 @@ class UserPlaylist(Resource):
 
 @spotify_controller.route("/playlists/<string:playlist_id>/tracks")
 class PlaylistTracks(Resource):
+    tracks_model = spotify_controller.model("Tracks", {
+        "tracks": fields.List(fields.String("List of tracks URIs"))
+    })
+
+    @spotify_controller.expect(auth_args, tracks_model)
     @spotify_controller.doc("")
     def put(self, playlist_id):
         bearer_token: str = request.headers.get("Authorization")
@@ -99,6 +111,7 @@ class PlaylistTracks(Resource):
 
 @spotify_controller.route("/userProfileData")
 class UserProfileData(Resource):
+    @spotify_controller.expect(auth_args)
     @spotify_controller.doc("")
     def get(self):
         bearer_token = request.headers.get("Authorization")
