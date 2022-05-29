@@ -31,7 +31,7 @@ SPOTIFY_CLIENT_SECRET= client secret from dev dashboard in spotify
 SPOTIFY_REDIRECT_URI=http://127.0.0.1:5000/api/v1/spotify-controller/temporary -> link to the page after successful OAuth2 Redirection
 ```
 ----
-### Documentation
+### API Documentation
 I have used the Swagger (OpenAPI) from Flask-Restx module, to get auto-generated docs and proper args/req body in endpoints <br />
 
 To display the docs, after running up the server, get to the endpoint:
