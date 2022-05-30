@@ -2,7 +2,7 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 import requests as req
 
-from misc.config import Config
+import conf.settings as settings
 from api.parsers import authorize_callback_args, auth_args
 
 
@@ -141,8 +141,8 @@ class Authorize(Resource):
         url = req.Request('GET', "https://accounts.spotify.com/authorize", params={
             'scope': scopes,
             'response_type': 'code',
-            'redirect_uri': Config.SPOTIFY_REDIRECT_URI,
-            'client_id': Config.SPOTIFY_CLIENT_ID
+            'redirect_uri': settings.SPOTIFY_REDIRECT_URI,
+            'client_id': settings.SPOTIFY_CLIENT_ID
         }).prepare().url
 
         return {"url": url}, 200
@@ -158,9 +158,9 @@ class AuthorizeCallback(Resource):
         access_data = req.post("https://accounts.spotify.com/api/token", data={
             'grant_type': 'authorization_code',
             'code': code,
-            'redirect_uri': Config.SPOTIFY_REDIRECT_URI,
-            'client_id': Config.SPOTIFY_CLIENT_ID,
-            'client_secret': Config.SPOTIFY_CLIENT_SECRET
+            'redirect_uri': settings.SPOTIFY_REDIRECT_URI,
+            'client_id': settings.SPOTIFY_CLIENT_ID,
+            'client_secret': settings.SPOTIFY_CLIENT_SECRET
         })
 
         return access_data.json(), access_data.status_code

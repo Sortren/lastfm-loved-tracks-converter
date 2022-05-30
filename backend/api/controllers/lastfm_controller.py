@@ -2,7 +2,7 @@ from flask import make_response, request
 from flask_restx import Resource, Namespace
 import requests as req
 
-from misc.config import Config
+import conf.settings as settings
 from api.parsers import loved_tracks_args
 
 lastfm_controller = Namespace("lastfm-controller",
@@ -19,7 +19,7 @@ class LovedTracks(Resource):
         format = request.args.get("format")
 
         loved_tracks = req.get(
-            f"https://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&user={username}&api_key={Config.API_KEY}&format={format}"
+            f"https://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&user={username}&api_key={settings.LASTFM_API_KEY}&format={format}"
 
         )
 
