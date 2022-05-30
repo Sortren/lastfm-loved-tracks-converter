@@ -1,16 +1,18 @@
 from flask_restx import reqparse
 
-loved_tracks_args = reqparse.RequestParser()
+parser = reqparse.RequestParser()
 
-loved_tracks_args.add_argument(
+parser.add_argument(
     "username",
     required=True,
+    location='args',
     type=str
 )
 
-loved_tracks_args.add_argument(
+parser.add_argument(
     "format",
     required=True,
+    location='args',
     type=str,
     choices=("json", "xml")
 )

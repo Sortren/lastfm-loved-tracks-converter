@@ -1,10 +1,11 @@
 from flask_restx import reqparse
 
-authorize_callback_args = reqparse.RequestParser()
+parser = reqparse.RequestParser()
 
-authorize_callback_args.add_argument(
+parser.add_argument(
     "code",
     required=True,
+    location='args',
     help="Code that has been received from OAuth authorization in spotify after login using /authorize endpoint",
     type=str
 )

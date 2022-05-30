@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 import requests as req
 
 import conf.settings as settings
-from api.parsers import authorize_callback_args, auth_args
+from api.parsers import auth_parser, authorize_callback_parser
 
 
 spotify_controller = Namespace("spotify-controller",
@@ -22,9 +22,11 @@ class Search(Resource):
     })
 
     @spotify_controller.doc("")
-    @spotify_controller.expect(auth_args, tracks_to_search_model)
+    @spotify_controller.expect(auth_parser, tracks_to_search_model)
     def get(self):
-        bearer_token = request.headers.get("Authorization")
+        auth_args = auth_parser.parse_args()
+        bearer_token = auth_args.get("Authorization")
+        
         request_body_payload = request.get_json().get("tracks")
 
         found_tracks = []
@@ -71,9 +73,11 @@ class UserPlaylist(Resource):
     })
 
     @spotify_controller.doc("")
-    @spotify_controller.expect(auth_args, playlist_model)
+    @spotify_controller.expect(auth_parser, playlist_model)
     def post(self, user_id):
-        bearer_token = request.headers.get("Authorization")
+        auth_args = auth_parser.parse_args()
+        bearer_token = auth_args.get("Authorization")
+
         request_body_payload = request.get_json()
 
         playlist_created_response = req.post(
@@ -97,10 +101,12 @@ class PlaylistTracks(Resource):
         "tracks": fields.List(fields.String("List of tracks URIs"))
     })
 
-    @spotify_controller.expect(auth_args, tracks_model)
+    @spotify_controller.expect(auth_parser, tracks_model)
     @spotify_controller.doc("")
     def put(self, playlist_id):
-        bearer_token: str = request.headers.get("Authorization")
+        auth_args = auth_parser.parse_args()
+        bearer_token = auth_args.get("Authorization")
+        
         tracks_payload: list[str] = request.get_json().get("tracks")
         tracks: str = ",".join(tracks_payload)
 
@@ -119,10 +125,11 @@ class PlaylistTracks(Resource):
 
 @spotify_controller.route("/user-profile-data")
 class UserProfileData(Resource):
-    @spotify_controller.expect(auth_args)
+    @spotify_controller.expect(auth_parser)
     @spotify_controller.doc("")
     def get(self):
-        bearer_token = request.headers.get("Authorization")
+        auth_args = auth_parser.parse_args()
+        bearer_token = auth_args.get("Authorization")
 
         profile_data = req.get(
             "https://api.spotify.com/v1/me",
@@ -150,10 +157,11 @@ class Authorize(Resource):
 
 @spotify_controller.route("/authorize-callback")
 class AuthorizeCallback(Resource):
-    @spotify_controller.expect(authorize_callback_args)
+    @spotify_controller.expect(authorize_callback_parser)
     @spotify_controller.doc("")
     def get(self):
-        code = request.args.get("code")
+        authorize_callback_args = authorize_callback_parser.parse_args()
+        code = authorize_callback_args.get("code")
 
         access_data = req.post("https://accounts.spotify.com/api/token", data={
             'grant_type': 'authorization_code',

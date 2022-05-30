@@ -1,3 +1,3 @@
-from .loved_tracks_parser import loved_tracks_args
-from .authorize_callback_parser import authorize_callback_args
-from .auth_parser import auth_args
+from .loved_tracks_parser import parser as loved_tracks_parser
+from .authorize_callback_parser import parser as authorize_callback_parser
+from .auth_parser import parser as auth_parser
