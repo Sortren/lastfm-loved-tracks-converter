@@ -25,6 +25,24 @@
 
 ### Configuration
 
+Create venv
+
+```
+python -m venv venv
+```
+
+Switch to it
+
+```
+./venv/Scripts/activate
+```
+
+Install required dependencies
+
+```
+pip install -r requirements.txt
+```
+
 .env file should look like this:
 
 ```
@@ -33,6 +51,12 @@ LASTFM_API_KEY = api key to the Last.fm service
 SPOTIFY_CLIENT_ID= client id from dev dashboard in spotify
 SPOTIFY_CLIENT_SECRET= client secret from dev dashboard in spotify
 SPOTIFY_REDIRECT_URI=http://127.0.0.1:5000/api/v1/spotify-controller/temporary -> link to the page after successful OAuth2 Redirection
+```
+
+This will start the backend API
+
+```
+python main.py
 ```
 
 ---
